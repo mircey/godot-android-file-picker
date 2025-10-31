@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace "com.pattlebass.godotdirectoryaccessgranter"
+    namespace "com.pattlebass.godotfilepicker"
     compileSdk 34
 
     defaultConfig {
-        minSdk 26
+        minSdk 19
         targetSdk 34
         versionCode 1
         versionName "1.0"
