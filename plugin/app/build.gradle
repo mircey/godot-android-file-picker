@@ -35,3 +35,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation("org.godotengine:godot:4.2.2.stable")
 }
+
+task copyAarToGodot(type: Copy) {
+    from('build/outputs/aar/')
+    into('Y:/Local Projects/super-mario-bros.-remastered-android/addons/AndroidFilePicker/')
+    include('*.aar')
+}
+
+build.finalizedBy(copyAarToGodot)

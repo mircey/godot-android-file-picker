@@ -55,15 +55,15 @@ public class GodotFilePicker extends org.godotengine.godot.plugin.GodotPlugin {
     }
 
     @UsedByGodot
-    public void openFilePicker(String initialPath, String type) {
+    public void openFilePicker(String initialUri, String type) {
         Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
         //Intent chooseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         //chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
         chooseFile.setType(type == null || type.isEmpty() ? "*/*" : type);
-        chooseFile = Intent.createChooser(chooseFile, "Choose a project");
-        //if(initialPath != null && !initialPath.isEmpty()) {
-        //    chooseFile.putExtra(DocumentsContract.EXTRA_INITIAL_URI, Uri.fromFile(new File(initialPath)));
-        //}
+        chooseFile = Intent.createChooser(chooseFile, "Choose a project"); // TODO maybe make title an argument as well?
+        if(initialUri != null && !initialUri.isEmpty()) {
+            chooseFile.putExtra(DocumentsContract.EXTRA_INITIAL_URI, initialUri);
+        }
         activity.startActivityForResult(chooseFile, OPEN_FILE);
     }
 
@@ -74,10 +74,10 @@ public class GodotFilePicker extends org.godotengine.godot.plugin.GodotPlugin {
     }
 
     @UsedByGodot
-    public void openDirectoryPicker(String initialPath) {
+    public void openDirectoryPicker(String initialUri) {
         Intent chooseDirectory = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        if(initialPath != null && !initialPath.isEmpty()) {
-            chooseDirectory.putExtra(DocumentsContract.EXTRA_INITIAL_URI, Uri.fromFile(new File(initialPath)));
+        if(initialUri != null && !initialUri.isEmpty()) {
+            chooseDirectory.putExtra(DocumentsContract.EXTRA_INITIAL_URI, initialUri);
         }
         activity.startActivityForResult(chooseDirectory, OPEN_DIRECTORY);
     }
