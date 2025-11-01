@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.storage.StorageManager;
 import android.provider.DocumentsContract;
 import android.provider.OpenableColumns;
 import android.util.Log;
@@ -55,20 +56,28 @@ public class GodotFilePicker extends org.godotengine.godot.plugin.GodotPlugin {
 
     @UsedByGodot
     public void openFilePicker(String initialPath, String type) {
-        //Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
-        Intent chooseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
-        chooseFile.setType(type.isEmpty() ? "*/*" : type);
-        //chooseFile = Intent.createChooser(chooseFile, "Choose a project");
-        chooseFile.putExtra(DocumentsContract.EXTRA_INITIAL_URI, Uri.fromFile(new File(Environment.DIRECTORY_DOWNLOADS)));
+        Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+        //Intent chooseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        //chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
+        chooseFile.setType(type == null || type.isEmpty() ? "*/*" : type);
+        chooseFile = Intent.createChooser(chooseFile, "Choose a project");
+        //if(initialPath != null && !initialPath.isEmpty()) {
+        //    chooseFile.putExtra(DocumentsContract.EXTRA_INITIAL_URI, Uri.fromFile(new File(initialPath)));
+        //}
         activity.startActivityForResult(chooseFile, OPEN_FILE);
+    }
+
+    // sadly, does not work :(. this seems to be an android limitation
+    @UsedByGodot
+    public void openFilePickerInDownloads(String type) {
+        openFilePicker(Environment.DIRECTORY_DOWNLOADS, type);
     }
 
     @UsedByGodot
     public void openDirectoryPicker(String initialPath) {
         Intent chooseDirectory = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        if(initialPath != null && !initialPath.isEmpty() && Uri.parse(initialPath) != null) {
-            chooseDirectory.putExtra(DocumentsContract.EXTRA_INITIAL_URI, initialPath);
+        if(initialPath != null && !initialPath.isEmpty()) {
+            chooseDirectory.putExtra(DocumentsContract.EXTRA_INITIAL_URI, Uri.fromFile(new File(initialPath)));
         }
         activity.startActivityForResult(chooseDirectory, OPEN_DIRECTORY);
     }
