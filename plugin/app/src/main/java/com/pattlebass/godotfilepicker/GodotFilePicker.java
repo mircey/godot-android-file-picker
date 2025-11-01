@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.OpenableColumns;
 import android.util.Log;
@@ -53,18 +54,21 @@ public class GodotFilePicker extends org.godotengine.godot.plugin.GodotPlugin {
     }
 
     @UsedByGodot
-    public void openFilePicker(String type) {
-        Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+    public void openFilePicker(String initialPath, String type) {
+        //Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent chooseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
         chooseFile.setType(type.isEmpty() ? "*/*" : type);
-        chooseFile = Intent.createChooser(chooseFile, "Choose a project");
+        //chooseFile = Intent.createChooser(chooseFile, "Choose a project");
+        chooseFile.putExtra(DocumentsContract.EXTRA_INITIAL_URI, Uri.fromFile(new File(Environment.DIRECTORY_DOWNLOADS)));
         activity.startActivityForResult(chooseFile, OPEN_FILE);
     }
 
     @UsedByGodot
-    public void openDirectoryPicker(String pathToLoad) {
+    public void openDirectoryPicker(String initialPath) {
         Intent chooseDirectory = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        if(pathToLoad != null && !pathToLoad.isEmpty() && Uri.parse(pathToLoad) != null) {
-            chooseDirectory.putExtra(DocumentsContract.EXTRA_INITIAL_URI, pathToLoad);
+        if(initialPath != null && !initialPath.isEmpty() && Uri.parse(initialPath) != null) {
+            chooseDirectory.putExtra(DocumentsContract.EXTRA_INITIAL_URI, initialPath);
         }
         activity.startActivityForResult(chooseDirectory, OPEN_DIRECTORY);
     }
